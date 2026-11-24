@@ -4,12 +4,10 @@ import { addTask, editTask, removeTask } from "./redux/slices/TodosSlices.js";
 
 export default function App() {
     const dispatch = useDispatch();
-    const tasks = useSelector(state => state.todos.data);
-    
-
+    const tasks = useSelector(state => state.todos);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [taskName, setTaskName] = useState([]);
-    const [taskTime, setTaskTime] = useState([]);
+    const [taskName, setTaskName] = useState("");
+    const [taskTime, setTaskTime] = useState("");
     const [selectedTask, setSelectedTask] = useState(null);
 
     const today = new Date().toLocaleDateString("en-US", {
@@ -58,7 +56,7 @@ export default function App() {
                     id: selectedTask.id,
                     title: taskName,
                     time: taskTime,
-                })
+                }),
             );
         } else {
             dispatch(
@@ -67,7 +65,7 @@ export default function App() {
                     title: taskName,
                     time: taskTime,
                     done: false,
-                })
+                }),
             );
         }
 
@@ -86,7 +84,7 @@ export default function App() {
             <div className="bg-white w-full max-w-3xl my-5 p-6 md:p-10 rounded-lg">
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-semibold">My Everyday</h1>
-                    <span className="text-zinc-400">•••</span>
+                    <span className="text-zinc-400">...</span>
                 </div>
 
                 <div className="flex justify-between items-center mt-5 text-zinc-500">
@@ -117,14 +115,16 @@ export default function App() {
                                     </div>
 
                                     <div className="flex gap-3 text-sm">
-                                        <button type="button" onClick={() => openEditModal(task)} className="text-blue-600">
+                                        <button
+                                            type="button"
+                                            onClick={() => openEditModal(task)}
+                                            className="text-blue-600">
                                             Edit
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => dispatch(removeTask(task.id))}
-                                            className="text-red-600"
-                                        >
+                                            className="text-red-600">
                                             Hapus
                                         </button>
                                     </div>
@@ -134,11 +134,7 @@ export default function App() {
                     )}
                 </div>
 
-                <button
-                    type="button"
-                    onClick={openAddModal}
-                    className="mt-6 rounded bg-zinc-900 px-4 py-2 text-white"
-                >
+                <button type="button" onClick={openAddModal} className="mt-6 rounded bg-zinc-900 px-4 py-2 text-white">
                     + Add Task
                 </button>
             </div>
@@ -146,19 +142,15 @@ export default function App() {
             {isModalOpen && (
                 <div
                     className="fixed inset-0 z-10 flex items-center justify-center bg-black/40 p-4"
-                    onClick={() => setIsModalOpen(false)}
-                >
-                    <div
-                        className="w-full max-w-md rounded-lg bg-white p-6"
-                        onClick={event => event.stopPropagation()}
-                    >
-                        <h2 className="mb-5 text-xl font-semibold">
-                            {selectedTask ? "Edit Task" : "Add Task"}
-                        </h2>
+                    onClick={() => setIsModalOpen(false)}>
+                    <div className="w-full max-w-md rounded-lg bg-white p-6" onClick={event => event.stopPropagation()}>
+                        <h2 className="mb-5 text-xl font-semibold">{selectedTask ? "Edit Task" : "Add Task"}</h2>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label htmlFor="taskName" className="mb-1 block">Task Name</label>
+                                <label htmlFor="taskName" className="mb-1 block">
+                                    Task Name
+                                </label>
                                 <input
                                     id="taskName"
                                     type="text"
@@ -171,7 +163,9 @@ export default function App() {
                             </div>
 
                             <div>
-                                <label htmlFor="taskTime" className="mb-1 block">Time</label>
+                                <label htmlFor="taskTime" className="mb-1 block">
+                                    Time
+                                </label>
                                 <input
                                     id="taskTime"
                                     type="time"
@@ -185,8 +179,7 @@ export default function App() {
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="rounded border border-zinc-300 px-4 py-2"
-                                >
+                                    className="rounded border border-zinc-300 px-4 py-2">
                                     Cancel
                                 </button>
                                 <button type="submit" className="rounded bg-zinc-900 px-4 py-2 text-white">

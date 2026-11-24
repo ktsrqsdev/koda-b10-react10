@@ -1,32 +1,31 @@
 
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import todosReducer from "./slices/TodosSlices.js";
 
-// Menghubungkan Redux Persist dengan localStorage
-const storage = {
-    getItem: (key) => Promise.resolve(localStorage.getItem(key)),
-    setItem: (key, value) => {
-        localStorage.setItem(key, value);
-        return Promise.resolve(value);
-    },
-    removeItem: (key) => {
-        localStorage.removeItem(key);
-        return Promise.resolve();
-    },
-};
-
 const persistConfig = {
-    key: "data",
-    storage,
+    key: "root",
+    storage: {
+        getItem: (key) => Promise.resolve(localStorage.getItem(key)),
+        setItem: (key, value) => {
+            localStorage.setItem(key, value);
+            return Promise.resolve(value);
+        },
+        removeItem: (key) => {
+            localStorage.removeItem(key);
+            return Promise.resolve();
+        },
+    },
 };
 
-const persistedReducer = persistReducer(persistConfig, todosReducer);
+const rootReducer = combineReducers({
+    todos: todosReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-    reducer: {
-        todos: persistedReducer,
-    },
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false,
